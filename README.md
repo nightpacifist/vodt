@@ -38,7 +38,7 @@ server {
 }
 
 server {
-    if ($host = vodt.domain-for-tests.com) {
+    if ($host = domain.com) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
