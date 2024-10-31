@@ -49,7 +49,7 @@ class TelegramController extends \app\services\base\Controller
         $customer_id = $auth->saveUser($first_name, $username);
 
         $hash = $auth->createToken($customer_id);
-        setcookie('tg_user', $hash);
+        setcookie('tg_user', $hash, time()+3600);
         header("Location: /dashbord");
         exit;
     }
