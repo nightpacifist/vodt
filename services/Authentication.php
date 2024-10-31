@@ -46,7 +46,7 @@ class Authentication
         $data_base->insert([
             'customer_id' => $customer_id,
             'hash' => $hash,
-            'expires_at' => 0,
+            'expires_at' => time()+3600,
         ]);
 
         return $hash;
