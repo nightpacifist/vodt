@@ -22,6 +22,8 @@ class Application
 
     public function init() {
 
+
+
 //        var_dump($_SERVER['REQUEST_URI']);
 //        if(!isset($_GET["route"])) {
 //            exit();

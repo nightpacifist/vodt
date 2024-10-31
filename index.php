@@ -9,5 +9,6 @@ use app\Application;
 ClassLoader::getInstance();
 
 include_once("configs/route.php");
+include_once("configs/main.php");
 
 Application::getInstance()->init();

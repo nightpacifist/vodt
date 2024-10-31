@@ -5,7 +5,7 @@ namespace app\services\base;
 abstract class Controller
 {
 
-    public function render($view, $data){
+    public function render($view, $data = []){
         extract($data);
         require($_SERVER["DOCUMENT_ROOT"] . '/views/' . $view . '.php');
         ob_flush();

@@ -18,11 +18,20 @@ class Route
     public static function run($uri, $method = 'get'){
         foreach (Route::$get as $item) {
             $route_rule = Route::getPattern($item['uri']);
+
+            $uri = explode("?", $uri)[0];
+
             if(preg_match($route_rule['pattern'], $uri, $matches)){
 
                 $get_var = [];
                 foreach ($route_rule['data'] as $key => $name_get_var) {
                     $get_var[$name_get_var] = $matches[$key];
+                }
+
+                if(!empty($_GET)){
+                    foreach ($_GET as $key => $value) {
+                        $get_var[$key] = $value;
+                    }
                 }
 
                 $class = $item['action'][0];
@@ -62,6 +71,7 @@ class Route
     public static function getPattern($uri){
         $patterns = explode("/", $uri);
 
+        //var_dump($uri);
         $data = [];
         $new_pattern = '';
 
@@ -78,7 +88,16 @@ class Route
             }
         }
 
-        $new_pattern = rtrim($new_pattern, "/");
+        if($new_pattern != "//"){
+            $new_pattern = rtrim($new_pattern, "/");
+        }else{
+            $new_pattern = '/';
+        }
+
+
+
+        //var_dump($data);
+
 
         return ['data' => $data, 'pattern' => '#^' . $new_pattern . '$#'];
 
