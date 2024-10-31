@@ -47,3 +47,14 @@ server {
     return 404; # managed by Certbot
 }
 ```
+
+### Параметри .env:
+
+```
+db_name=
+db_user=
+db_password=
+db_host=
+bot_token=
+secret=
+```
