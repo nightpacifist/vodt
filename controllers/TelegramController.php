@@ -4,11 +4,21 @@ namespace app\controllers;
 
 use app\services\Authentication;
 use app\services\Config;
+use app\services\Telegram;
 
 class TelegramController extends \app\services\base\Controller
 {
     public function callback(){
-        return $this->renderJson([]);
+
+
+
+
+        //var_dump('awdaw');
+        $data = json_decode(file_get_contents("php://input"), true);
+        file_put_contents("test.txt", file_get_contents("php://input"), FILE_APPEND);
+
+        (new Telegram())->run($data);
+        //return $this->renderJson(['status' => true]);
     }
 
     public function authRedirect($id, $first_name, $username, $photo_url, $auth_date, $hash){
@@ -46,7 +56,14 @@ class TelegramController extends \app\services\base\Controller
             exit;
         }
 
-        $customer_id = $auth->saveUser($first_name, $username);
+        $customer_id = $auth->saveUser($first_name, $username, $id);
+
+        $telegram = new Telegram();
+
+        $telegram->chat_id = $id;
+
+        $telegram->sendWelcomeMessages();
+        $telegram->sendFlowers();
 
         $hash = $auth->createToken($customer_id);
         setcookie('tg_user', $hash, time()+3600);

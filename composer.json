@@ -1,2 +1,7 @@
 {
+  "require": {
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-openssl": "*"
+  }
 }

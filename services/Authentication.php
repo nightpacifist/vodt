@@ -8,25 +8,39 @@ use app\services\base\DataBase;
 class Authentication
 {
 
-
-    public function saveUser($first_name, $last_name = '', $phone = '', $email = ''){
+    public function checkCustomer($chat_id){
         $data_base = DataBase::getInstance();
 
         $data_base->setTable('customers');
 
-        $customer = $data_base->where(['last_name' => $last_name])->one();
+        $customer = $data_base->where(['username' => $chat_id])->one();
+
+        if(is_null($customer)){
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public function saveUser($first_name, $username, $chat_id, $phone = '', $email = ''){
+        $data_base = DataBase::getInstance();
+
+        $data_base->setTable('customers');
+
+        $customer = $data_base->where(['username' => $username])->one();
 
         if(!is_null($customer)){
             return $customer['id'];
         }
 
-        $customer_id = $data_base->insert([
+        return $data_base->insert([
             'first_name' => $first_name,
-            'last_name' => $last_name,
+            'username' => $username,
             'phone' => $phone,
             'email' => $email,
+            'chat_id' => $chat_id
         ]);
-        return $customer_id;
     }
 
     public function createToken($customer_id){

@@ -32,6 +32,7 @@ class DataBase
     }
 
     public function setTable($table){
+        $this->where = [];
         $this->table = $table;
         return $this;
     }
@@ -124,7 +125,7 @@ class DataBase
 
         $result = $this->connect->query($sql);
 
-        return $result->fetch_assoc();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function one(){
@@ -159,11 +160,64 @@ class DataBase
     }
 
     public function where($where_data){
+        $this->where = [];
         foreach ($where_data as $key => $value) {
             $this->where[$key] = $this->connect->real_escape_string($value);
         }
 
         return $this;
+    }
+
+    public function update($data_set, $data_where)
+    {
+
+        $type_value = [];
+        $where_value = [];
+        $set_value = [];
+        foreach ($data_set as $key => $item) {
+            $set_value[] = $key . ' = ?';
+            $type_value[] = $item;
+        }
+
+        foreach ($data_where as $key => $item) {
+            $where_value[] = $key . ' = ?';
+            $type_value[] = $item;
+        }
+
+        $set_value = implode(", ", $set_value);
+        $where_value = implode(", ", $where_value);
+
+        $stmt = $this->connect->prepare("UPDATE " . $this->table . " SET " . $set_value . " WHERE " . $where_value);
+
+        $types = '';
+        $data = [];
+        foreach ($type_value as $key => $param) {
+            switch (gettype($param)){
+                case 'integer':
+                    $types .= 'i';
+                    break;
+                case 'double':
+                    $types .= 'd';
+                    break;
+                default:
+                    $types .= 's';
+                    break;
+            }
+
+            $data[] = &$type_value[$key];
+        }
+
+        array_unshift($data, $types);
+
+        call_user_func_array([$stmt, 'bind_param'], $data);
+
+        if ($stmt->execute()) {
+            //echo "Запис додано успішно!" . $last_id;
+        } else {
+            echo "Помилка: " . $stmt->error;
+        }
+        $stmt->close();
+        return true;
     }
 
 

@@ -8,15 +8,15 @@ class Route
     private static $get = [];
 
     public static function get($uri, $action){
-        Route::$get[] = ['uri' => $uri, 'action' => explode(":", $action)];
+        Route::$post[] = ['uri' => $uri, 'action' => explode(":", $action)];
     }
 
     public static function post($uri, $action){
-        Route::$post[] = ['uri' => $uri, 'action' => $action];
+        Route::$post[] = ['uri' => $uri, 'action' => explode(":", $action)];
     }
 
     public static function run($uri, $method = 'get'){
-        foreach (Route::$get as $item) {
+        foreach (Route::$post as $item) {
             $route_rule = Route::getPattern($item['uri']);
 
             $uri = explode("?", $uri)[0];
